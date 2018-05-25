@@ -21,15 +21,46 @@ class my_TS:
 		self.AP = atomic_props;
 		self.L = labelling_fcn;
 
-	def post(self,s,alpha):
+	def post(self,s,alpha=None):
 		#Description:
 		#	Find the direct alpha-successor of the the state s in the given Transition system
 		#	Literally is the set of states for which a tranistion exists from initial state s to the target state when action alpha is applied.
 
 		post_set = []
-		for transition in self.trans:
-			if (transition[0] is s) and (transition[1] is alpha):
-				#IF the initial state and action match, then add the destination to our post_set
-				post_set.append(transition[2])
+		for state in s:
+			for transition in self.trans:
+				if alpha is None:
+					#If the function was called with no action input then obtain the post for ANY
+					#feasible action.
+					if (transition[0] is state):
+						#IF the initial state and action match, then add the destination to our post_set
+						post_set.append(transition[2])
+				else:
+					if (transition[0] is state) and (transition[1] is alpha):
+						#IF the initial state and action match, then add the destination to our post_set
+						post_set.append(transition[2])
+
+		return post_set
+
+	def pre(self,s,alpha=None):
+		#Description:
+		#	Find the direct alpha-predecessor (or all direct predecessors) of the the state s
+		#	in the given Transition system
+		#	Literally is the set of states for which a tranistion exists from initial state s
+		#	to the target state when action alpha (or when any action) is applied.
+
+		post_set = []
+		for state in s:
+			for transition in self.trans:
+				if alpha is None:
+					#If the function was called with no action input then obtain the post for ANY
+					#feasible action.
+					if (transition[2] is state):
+						#IF the initial state and action match, then add the destination to our post_set
+						post_set.append(transition[0])
+				else:
+					if (transition[2] is state) and (transition[1] is alpha):
+						#IF the initial state and action match, then add the destination to our post_set
+						post_set.append(transition[0])
 
 		return post_set
